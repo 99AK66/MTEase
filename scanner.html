@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MTEase Scanner</title>
+<style>
+  body{margin:0;font-family:sans-serif;background:#0f172a;color:#fff;text-align:center}
+  video{width:100%;max-height:70vh;object-fit:contain;background:#000}
+  #msg{padding:12px;font-size:14px}
+  button{padding:10px 18px;border-radius:10px;border:0;background:#0f8a8a;color:#fff;font-weight:700}
+</style>
+</head>
+<body>
+<video id="v" autoplay muted playsinline></video>
+<div id="msg">กำลังเปิดกล้อง…</div>
+<button onclick="window.close()">ปิด</button>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<script>
+const ret = new URLSearchParams(location.search).get('returnOrigin') || '';
+const okOrigin = /^https:\/\/([a-z0-9-]+\.)*(googleusercontent\.com|google\.com)$/.test(ret);
+const v = document.getElementById('v'), msg = document.getElementById('msg');
+let stream, done = false;
+async function go(){
+  try{
+    stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}}});
+    v.srcObject = stream; await v.play(); msg.textContent = 'หันกล้องไปที่ QR Code';
+    const c = document.createElement('canvas'), x = c.getContext('2d',{willReadFrequently:true});
+    (function tick(){
+      if(done) return;
+      if(v.videoWidth){
+        c.width = v.videoWidth; c.height = v.videoHeight; x.drawImage(v,0,0);
+        const q = jsQR(x.getImageData(0,0,c.width,c.height).data, c.width, c.height);
+        if(q && q.data){ send(q.data); return; }
+      }
+      setTimeout(tick,120);
+    })();
+  }catch(e){ msg.textContent = 'เปิดกล้องไม่ได้: ' + e.name; }
+}
+function send(code){
+  done = true; stream && stream.getTracks().forEach(t=>t.stop());
+  if(window.opener && okOrigin){
+    window.opener.postMessage({type:'MTEASE_SCAN_RESULT', code}, ret);
+    msg.textContent = 'สแกนสำเร็จ'; setTimeout(()=>window.close(),400);
+  }else{ msg.textContent = 'อ่านได้: ' + code + ' (ส่งกลับระบบไม่ได้ ให้เปิดจากปุ่มในระบบ)'; }
+}
+go();
+</script>
+</body>
+</html>
