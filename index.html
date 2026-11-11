@@ -6,69 +6,26 @@
   <base target="_top">
   <title>MTEase</title>
   <style>
-    html, body {
+    body, html {
+      height: 100%;
       margin: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
     }
-
     iframe {
-      position: fixed;
-      inset: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      border: 0;
+      border: none;
     }
   </style>
 </head>
 <body>
+
   <iframe
     src="https://script.google.com/macros/s/AKfycbzDd1-Q9eoqp56ZCnV72Efz0nsIKKEB6xSbOw6qukBKOsi4swsd8IFwDeluRXoaE57p1g/exec"
-    allow="camera *; microphone *; geolocation *"
-    allowfullscreen>
-  </iframe>
+    style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
+    allow="camera; microphone; geolocation;"></iframe>
+
 </body>
 </html>
-
-
-<!-- <!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <base target="_top"> 
-    <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-        }
-        iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-    </style>
-</head>
-<body>
-   
-    <iframe src="https://script.google.com/macros/s/AKfycbzDd1-Q9eoqp56ZCnV72Efz0nsIKKEB6xSbOw6qukBKOsi4swsd8IFwDeluRXoaE57p1g/exec"
-            style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0;"
-            allow="camera; microphone; geolocation;"></iframe>
-
-    <script>
-        
-        window.onload = function() {
-            var iframe = document.querySelector('iframe');
-            iframe.onload = function() {
-                console.log("Iframe loaded successfully");
-            };
-            iframe.onerror = function() {
-                console.error("Error loading iframe content");
-            };
-        };
-    </script>
-</body>
-</html> -->
